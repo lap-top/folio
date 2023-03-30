@@ -6,6 +6,11 @@ import { z } from "zod";
  */
 const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
+  AWS_ACCESS_KEY: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  AWS_REGION: z.string(),
+  SES_SENDER_EMAIL: z.string().email(),
+  SES_RECIPIENT_EMAIL: z.string().email(),
 });
 
 /**
@@ -24,6 +29,11 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_REGION: process.env.AWS_REGION,
+  SES_SENDER_EMAIL: process.env.SES_SENDER_EMAIL,
+  SES_RECIPIENT_EMAIL: process.env.SES_RECIPIENT_EMAIL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
@@ -50,7 +60,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   if (parsed.success === false) {
     console.error(
       "❌ Invalid environment variables:",
-      parsed.error.flatten().fieldErrors,
+      parsed.error.flatten().fieldErrors
     );
     throw new Error("Invalid environment variables");
   }
@@ -64,7 +74,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
         throw new Error(
           process.env.NODE_ENV === "production"
             ? "❌ Attempted to access a server-side environment variable on the client"
-            : `❌ Attempted to access server-side environment variable '${prop}' on the client`,
+            : `❌ Attempted to access server-side environment variable '${prop}' on the client`
         );
       return target[/** @type {keyof typeof target} */ (prop)];
     },

@@ -10,6 +10,9 @@ import ProjectCard from "~/components/projectcard";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Mutation } from "@tanstack/react-query";
+import { Modal } from "~/components/modal";
+import { title } from "process";
 
 const validationSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -21,7 +24,10 @@ type ValidationSchema = z.infer<typeof validationSchema>;
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const onSubmit: SubmitHandler<ValidationSchema> = (data) => console.log(data);
+  const contact = api.example.contact.useMutation();
+
+  const onSubmit: SubmitHandler<ValidationSchema> = (data) =>
+    contact.mutate({ email: data.email, message: data.message });
 
   const {
     register,
@@ -42,6 +48,7 @@ const Home: NextPage = () => {
         <div className="bg-bg bg-contain bg-right bg-no-repeat">
           <div className="mx-auto flex min-h-screen max-w-6xl flex-row ">
             <div className="flex flex-col justify-center">
+              <p>{contact.data!}</p>
               <h1 className="mb-4 content-center font-Syne text-8xl font-medium">
                 scott norris
               </h1>
@@ -88,51 +95,73 @@ const Home: NextPage = () => {
           </h1>
           <p className="w-3/4 font-OpenSans text-xl"></p>
           <div className="grid grid-cols-2">
-            <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-              <label
-                htmlFor="email"
-                className="mb-1 mt-2 font-OpenSans text-lg font-medium"
-              >
-                Email
-              </label>
-              <input
-                className={`rounded-lg border border-blue-600 p-3 font-OpenSans text-lg focus:outline-none ${
-                  errors.email && "border-red-700"
-                }`}
-                type="email"
-                placeholder="youremail@gmail.com"
-                id="email"
-                {...register("email")}
-              ></input>
-              {errors.email && (
-                <p className="font-OpenSans text-red-700">
-                  {errors.email?.message}
+            {contact.data && (
+              <div className="relative">
+                <p className="mb-4 text-2xl">
+                  Hey your message was sent. Also thanks for getting in contact,
+                  i'll be in touch soon.
                 </p>
-              )}
-              <label
-                htmlFor="message"
-                className="mb-1 mt-2 font-OpenSans text-lg font-medium"
-              >
-                Message
-              </label>
-              <textarea
-                className={`resize-none rounded-lg border border-blue-600 p-2 font-OpenSans text-lg focus:outline-none ${
-                  errors.message && "border-red-700"
-                }`}
-                id="message"
-                rows={8}
-                maxLength={400}
-                {...register("message")}
-              ></textarea>
-              <p className="font-OpenSans text-red-700">
-                {errors.message?.message}
-              </p>
-              <button className="text-md border-1 mt-2 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
-                Send Email
-              </button>
-            </form>
+                <Image
+                  className="w-full"
+                  alt="scooby"
+                  src="/scooby.gif"
+                  width={64}
+                  height={64}
+                ></Image>
+              </div>
+            )}
+            {!contact.data && (
+              <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+                <label
+                  htmlFor="email"
+                  className="mb-1 mt-2 font-OpenSans text-lg font-medium"
+                >
+                  Email
+                </label>
+                <input
+                  className={`rounded-lg border border-blue-600 p-3 font-OpenSans text-lg focus:outline-none ${
+                    errors.email && "border-red-700"
+                  }`}
+                  type="email"
+                  placeholder="youremail@gmail.com"
+                  id="email"
+                  {...register("email")}
+                ></input>
+                {errors.email && (
+                  <p className="font-OpenSans text-red-700">
+                    {errors.email?.message}
+                  </p>
+                )}
+                <label
+                  htmlFor="message"
+                  className="mb-1 mt-2 font-OpenSans text-lg font-medium"
+                >
+                  Message
+                </label>
+                <textarea
+                  className={`resize-none rounded-lg border border-blue-600 p-2 font-OpenSans text-lg focus:outline-none ${
+                    errors.message && "border-red-700"
+                  }`}
+                  id="message"
+                  rows={8}
+                  maxLength={400}
+                  {...register("message")}
+                ></textarea>
+                <p className="font-OpenSans text-red-700">
+                  {errors.message?.message}
+                </p>
+                <button className="text-md border-1 mt-2 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
+                  Send Email
+                </button>
+              </form>
+            )}
+
             <div className="grid-rows-min grid h-full w-full grid-flow-row auto-rows-min place-content-center space-y-8">
-              <div className="flex w-fit flex-row space-x-4">
+              <Link
+                href="https://github.com/lap-top"
+                passHref={true}
+                className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
+              >
                 <Image
                   src={"/icons/github.svg"}
                   width={48}
@@ -142,8 +171,8 @@ const Home: NextPage = () => {
                 <p className="my-auto text-2xl leading-none text-blue-600">
                   github.com/lap-top
                 </p>
-              </div>
-              <div className="flex flex-row space-x-4">
+              </Link>
+              <div className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50">
                 <Image
                   src={"/icons/linkedin.svg"}
                   width={48}
@@ -154,7 +183,7 @@ const Home: NextPage = () => {
                   linkedin.com/scott
                 </p>
               </div>
-              <div className="flex flex-row space-x-4">
+              <div className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50">
                 <Image
                   src={"/icons/at.svg"}
                   width={48}

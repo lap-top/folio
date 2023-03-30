@@ -6,7 +6,7 @@ const ProjectCard: React.FC<ProjectCardItem> = (item) => {
     <div className="grid grid-flow-col  space-x-2 rounded-xl border border-blue-800">
       <Image
         className="h-48 w-48 rounded-xl border border-blue-800 object-cover"
-        src={"/projects/localsimple.png"}
+        src={item.image}
         alt={item.name}
         width={100}
         height={100}
