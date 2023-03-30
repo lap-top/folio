@@ -1,6 +1,5 @@
 // aws-ses.js
 import * as AWS from "aws-sdk";
-import * as nodemailer from "nodemailer";
 import { env } from "~/env.mjs";
 
 AWS.config.update({

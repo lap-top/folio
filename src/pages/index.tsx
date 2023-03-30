@@ -10,8 +10,6 @@ import ProjectCard from "~/components/projectcard";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Mutation } from "@tanstack/react-query";
-import { title } from "process";
 import { useState } from "react";
 
 const validationSchema = z.object({
@@ -75,13 +73,13 @@ const Home: NextPage = () => {
               <div className="mt-4 flex flex-row space-x-4">
                 <button
                   onClick={() => scrollTo("projects")}
-                  className="text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white"
+                  className="text-md border-1 rounded-lg border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white"
                 >
                   View Projects
                 </button>
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 "
+                  className="text-md border-1 rounded-lg border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 "
                 >
                   Contact Me
                 </button>
