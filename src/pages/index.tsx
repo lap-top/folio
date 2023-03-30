@@ -6,8 +6,8 @@ import Avatar from "../../public/avatar.png";
 import { api } from "~/utils/api";
 import { projects } from "~/utils/config";
 import ProjectCard from "~/components/projectcard";
-
-import { SubmitHandler, useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
@@ -22,7 +22,7 @@ type ValidationSchema = z.infer<typeof validationSchema>;
 
 const Home: NextPage = () => {
   const scrollTo = (id: string) => {
-    var element = document.getElementById(id);
+    const element = document.getElementById(id);
     element?.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -33,13 +33,14 @@ const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const contact = api.example.contact.useMutation();
 
-  const onSubmit: SubmitHandler<ValidationSchema> = (data) =>
+  const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
     contact.mutate({ email: data.email, message: data.message });
+  };
 
-  const onCopyEmail = () => {
-    navigator.clipboard.writeText("scottnorris.work@gmail.com");
+  const onCopyEmail = async () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
+    await navigator.clipboard.writeText("scottnorris.work@gmail.com");
   };
 
   const {
@@ -61,14 +62,13 @@ const Home: NextPage = () => {
         <div className="bg-bg bg-contain bg-right bg-no-repeat">
           <div className="mx-auto flex min-h-screen max-w-6xl flex-row ">
             <div className="flex flex-col justify-center">
-              <p>{contact.data!}</p>
               <h1 className="mb-4 content-center font-Syne text-8xl font-medium">
                 scott norris
               </h1>
               <p className="w-3/4 font-OpenSans text-xl">
                 I take an holistic approach to full-stack development
-                incorporating brand identity and design, prioritizing the user's
-                experience.
+                incorporating brand identity and design, prioritizing the
+                user&apos;s experience.
               </p>
               <div className="mt-4 flex flex-row space-x-4">
                 <button
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
           </p>
           <div className="max-auto mt-4 flex h-full w-full justify-center space-x-4">
             {projects.map((item) => (
-              <ProjectCard {...item} />
+              <ProjectCard key={item.name} {...item} />
             ))}
           </div>
         </div>
@@ -121,7 +121,7 @@ const Home: NextPage = () => {
               <div className="relative">
                 <p className="mb-4 text-2xl">
                   Hey your message was sent. Also thanks for getting in contact,
-                  i'll be in touch soon.
+                  i&apos;ll be in touch soon.
                 </p>
                 <Image
                   className="w-full"
@@ -133,7 +133,10 @@ const Home: NextPage = () => {
               </div>
             )}
             {!contact.data && (
-              <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="flex flex-col"
+                onSubmit={void handleSubmit((data) => onSubmit(data))}
+              >
                 <label
                   htmlFor="email"
                   className="mb-1 mt-2 font-OpenSans text-lg font-medium"
@@ -142,7 +145,7 @@ const Home: NextPage = () => {
                 </label>
                 <input
                   className={`rounded-lg border border-blue-600 p-3 font-OpenSans text-lg focus:outline-none ${
-                    errors.email && "border-red-700"
+                    errors.email ? "border-red-700" : ""
                   }`}
                   type="email"
                   placeholder="youremail@gmail.com"
@@ -162,7 +165,7 @@ const Home: NextPage = () => {
                 </label>
                 <textarea
                   className={`resize-none rounded-lg border border-blue-600 p-2 font-OpenSans text-lg focus:outline-none ${
-                    errors.message && "border-red-700"
+                    errors.message ? "border-red-700" : ""
                   }`}
                   id="message"
                   rows={8}
@@ -210,7 +213,7 @@ const Home: NextPage = () => {
                 </p>
               </Link>
               <div
-                onClick={() => onCopyEmail()}
+                onClick={void onCopyEmail}
                 className="duration-220  flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
               >
                 <Image
@@ -219,8 +222,12 @@ const Home: NextPage = () => {
                   height={48}
                   alt="github"
                 ></Image>
-                <div className="relative my-auto text-2xl leading-none text-blue-600">
-                  <p className={`${copied && "text-transparent"}`}>
+                <div className="relative my-auto text-2xl leading-none">
+                  <p
+                    className={`${
+                      copied ? "text-transparent" : "text-blue-600"
+                    }`}
+                  >
                     scottnorris.work@gmail.com
                   </p>
                   {copied && (

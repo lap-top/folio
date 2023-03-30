@@ -1,4 +1,5 @@
 // aws-ses.js
+import { TRPCError } from "@trpc/server";
 import * as AWS from "aws-sdk";
 import { env } from "~/env.mjs";
 
@@ -27,6 +28,17 @@ export const sendEmail = async (email: string, message: string) => {
       },
     },
   };
-  const response = await ses.sendEmail(params).promise();
-  return !response.$response.error;
+  const response = await ses
+    .sendEmail(params)
+    .promise()
+    .then((data) => {
+      return true;
+    })
+    .catch(() => {
+      throw new TRPCError({
+        message: "Trouble sending email",
+        code: "BAD_REQUEST",
+      });
+    });
+  return response;
 };
