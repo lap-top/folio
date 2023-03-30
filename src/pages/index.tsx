@@ -4,9 +4,32 @@ import Image from "next/image";
 import Link from "next/link";
 import Avatar from "../../public/avatar.png";
 import { api } from "~/utils/api";
+import { projects } from "~/utils/config";
+import ProjectCard from "~/components/projectcard";
+
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const validationSchema = z.object({
+  email: z.string().min(1, { message: "Email is required" }).email({
+    message: "Must be a valid email",
+  }),
+  message: z.string().min(5, { message: "Please provide an actual message." }),
+});
+type ValidationSchema = z.infer<typeof validationSchema>;
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const onSubmit: SubmitHandler<ValidationSchema> = (data) => console.log(data);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ValidationSchema>({
+    resolver: zodResolver(validationSchema),
+  });
 
   return (
     <>
@@ -23,15 +46,15 @@ const Home: NextPage = () => {
                 scott norris
               </h1>
               <p className="w-3/4 font-OpenSans text-xl">
-                I take an holistic based approach to full-stack development
+                I take an holistic approach to full-stack development
                 incorporating brand identity and design, prioritizing the user's
                 experience.
               </p>
               <div className="mt-4 flex flex-row space-x-4">
-                <button className="border-blue text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white">
+                <button className="text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white">
                   View Projects
                 </button>
-                <button className="border-blue text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
+                <button className="text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
                   Contact Me
                 </button>
               </div>
@@ -42,6 +65,106 @@ const Home: NextPage = () => {
                 src={Avatar}
                 alt="Avatar"
               ></Image>
+            </div>
+          </div>
+        </div>
+        <div className="mx-auto min-h-screen max-w-6xl">
+          <h1 className="mb-4 content-center font-Syne text-7xl font-medium">
+            projects
+          </h1>
+          <p className=" font-OpenSans text-xl">
+            Current projects i'm working on.
+          </p>
+          <div className="max-auto mt-8 flex h-full w-full justify-center space-x-4">
+            {projects.map((item) => (
+              <ProjectCard {...item} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mx-auto min-h-screen max-w-6xl">
+          <h1 className="mb-4 content-center font-Syne text-7xl font-medium">
+            contact
+          </h1>
+          <p className="w-3/4 font-OpenSans text-xl"></p>
+          <div className="grid grid-cols-2">
+            <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+              <label
+                htmlFor="email"
+                className="mb-1 mt-2 font-OpenSans text-lg font-medium"
+              >
+                Email
+              </label>
+              <input
+                className={`rounded-lg border border-blue-600 p-3 font-OpenSans text-lg focus:outline-none ${
+                  errors.email && "border-red-700"
+                }`}
+                type="email"
+                placeholder="youremail@gmail.com"
+                id="email"
+                {...register("email")}
+              ></input>
+              {errors.email && (
+                <p className="font-OpenSans text-red-700">
+                  {errors.email?.message}
+                </p>
+              )}
+              <label
+                htmlFor="message"
+                className="mb-1 mt-2 font-OpenSans text-lg font-medium"
+              >
+                Message
+              </label>
+              <textarea
+                className={`resize-none rounded-lg border border-blue-600 p-2 font-OpenSans text-lg focus:outline-none ${
+                  errors.message && "border-red-700"
+                }`}
+                id="message"
+                rows={8}
+                maxLength={400}
+                {...register("message")}
+              ></textarea>
+              <p className="font-OpenSans text-red-700">
+                {errors.message?.message}
+              </p>
+              <button className="text-md border-1 mt-2 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
+                Send Email
+              </button>
+            </form>
+            <div className="grid-rows-min grid h-full w-full grid-flow-row auto-rows-min place-content-center space-y-8">
+              <div className="flex w-fit flex-row space-x-4">
+                <Image
+                  src={"/icons/github.svg"}
+                  width={48}
+                  height={48}
+                  alt="github"
+                ></Image>
+                <p className="my-auto text-2xl leading-none text-blue-600">
+                  github.com/lap-top
+                </p>
+              </div>
+              <div className="flex flex-row space-x-4">
+                <Image
+                  src={"/icons/linkedin.svg"}
+                  width={48}
+                  height={48}
+                  alt="github"
+                ></Image>
+                <p className="my-auto text-2xl leading-none text-blue-600">
+                  linkedin.com/scott
+                </p>
+              </div>
+              <div className="flex flex-row space-x-4">
+                <Image
+                  src={"/icons/at.svg"}
+                  width={48}
+                  height={48}
+                  alt="github"
+                ></Image>
+                <p className="my-auto text-2xl leading-none text-blue-600">
+                  scottmail@gmail.com
+                </p>
+              </div>
             </div>
           </div>
         </div>
