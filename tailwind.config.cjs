@@ -5,6 +5,10 @@ const config = {
     extend: {
       fontFamily: {
         OpenSans: ["Open Sans"],
+        Syne: ["Syne"],
+      },
+      backgroundImage: {
+        bg: "url('../../public/bg.png')",
       },
     },
   },

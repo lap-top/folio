@@ -1,7 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
-
+import Avatar from "../../public/avatar.png";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -15,8 +16,34 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div>
-          <h1 className="font-OpenSans">Scott Norris</h1>
+        <div className="bg-bg bg-contain bg-right bg-no-repeat">
+          <div className="mx-auto flex min-h-screen max-w-6xl flex-row ">
+            <div className="flex flex-col justify-center">
+              <h1 className="mb-4 content-center font-Syne text-8xl font-medium">
+                scott norris
+              </h1>
+              <p className="w-3/4 font-OpenSans text-xl">
+                I take an holistic based approach to full-stack development
+                incorporating brand identity and design, prioritizing the user's
+                experience.
+              </p>
+              <div className="mt-4 flex flex-row space-x-4">
+                <button className="border-blue text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white">
+                  View Projects
+                </button>
+                <button className="border-blue text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
+                  Contact Me
+                </button>
+              </div>
+            </div>
+            <div className="flex w-1/2 justify-center ">
+              <Image
+                className="object-contain"
+                src={Avatar}
+                alt="Avatar"
+              ></Image>
+            </div>
+          </div>
         </div>
       </main>
     </>
