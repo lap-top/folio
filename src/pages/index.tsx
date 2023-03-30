@@ -11,8 +11,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mutation } from "@tanstack/react-query";
-import { Modal } from "~/components/modal";
 import { title } from "process";
+import { useState } from "react";
 
 const validationSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -23,11 +23,26 @@ const validationSchema = z.object({
 type ValidationSchema = z.infer<typeof validationSchema>;
 
 const Home: NextPage = () => {
+  const scrollTo = (id: string) => {
+    var element = document.getElementById(id);
+    element?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  };
+  const [copied, setCopied] = useState(false);
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const contact = api.example.contact.useMutation();
 
   const onSubmit: SubmitHandler<ValidationSchema> = (data) =>
     contact.mutate({ email: data.email, message: data.message });
+
+  const onCopyEmail = () => {
+    navigator.clipboard.writeText("scottnorris.work@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
 
   const {
     register,
@@ -58,10 +73,16 @@ const Home: NextPage = () => {
                 experience.
               </p>
               <div className="mt-4 flex flex-row space-x-4">
-                <button className="text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white">
+                <button
+                  onClick={() => scrollTo("projects")}
+                  className="text-md border-1 rounded-md border border-blue-600 px-5 py-3 font-OpenSans shadow-black/30 drop-shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-indigo-400 hover:text-white"
+                >
                   View Projects
                 </button>
-                <button className="text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 ">
+                <button
+                  onClick={() => scrollTo("contact")}
+                  className="text-md border-1 rounded-md border border-blue-800 bg-blue-600 px-5 py-3 font-OpenSans text-white drop-shadow-md transition duration-100 ease-in-out hover:scale-105 hover:bg-indigo-400 "
+                >
                   Contact Me
                 </button>
               </div>
@@ -75,21 +96,24 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="mx-auto min-h-screen max-w-6xl">
+        <div id="projects" className="mx-auto mt-8 max-w-6xl">
           <h1 className="mb-4 content-center font-Syne text-7xl font-medium">
             projects
           </h1>
-          <p className=" font-OpenSans text-xl">
-            Current projects i'm working on.
+          <p className=" font-OpenSans text-xl font-medium">
+            My current passion projects.
           </p>
-          <div className="max-auto mt-8 flex h-full w-full justify-center space-x-4">
+          <div className="max-auto mt-4 flex h-full w-full justify-center space-x-4">
             {projects.map((item) => (
               <ProjectCard {...item} />
             ))}
           </div>
         </div>
 
-        <div className="mx-auto min-h-screen max-w-6xl">
+        <div
+          id="contact"
+          className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center"
+        >
           <h1 className="mb-4 content-center font-Syne text-7xl font-medium">
             contact
           </h1>
@@ -156,11 +180,11 @@ const Home: NextPage = () => {
               </form>
             )}
 
-            <div className="grid-rows-min grid h-full w-full grid-flow-row auto-rows-min place-content-center space-y-8">
+            <div className="grid-rows-min grid h-full w-full grid-flow-row  place-content-center space-y-8">
               <Link
                 href="https://github.com/lap-top"
                 passHref={true}
-                className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
+                className="duration-220 flex w-fit  cursor-pointer flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
               >
                 <Image
                   src={"/icons/github.svg"}
@@ -172,27 +196,39 @@ const Home: NextPage = () => {
                   github.com/lap-top
                 </p>
               </Link>
-              <div className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50">
+              <Link
+                className="duration-220 flex w-fit cursor-pointer flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
+                href="https://linkedin.com/in/lap-top"
+                passHref={true}
+              >
                 <Image
                   src={"/icons/linkedin.svg"}
                   width={48}
                   height={48}
-                  alt="github"
+                  alt="linkedin"
                 ></Image>
-                <p className="my-auto text-2xl leading-none text-blue-600">
-                  linkedin.com/scott
+                <p className="my-auto text-2xl leading-none text-blue-600 ">
+                  linkedin.com/in/lap-top
                 </p>
-              </div>
-              <div className="duration-220 flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50">
+              </Link>
+              <div
+                onClick={() => onCopyEmail()}
+                className="duration-220  flex cursor-pointer  flex-row space-x-4 rounded-lg p-2 transition ease-in-out hover:scale-105 hover:bg-blue-50"
+              >
                 <Image
                   src={"/icons/at.svg"}
                   width={48}
                   height={48}
                   alt="github"
                 ></Image>
-                <p className="my-auto text-2xl leading-none text-blue-600">
-                  scottmail@gmail.com
-                </p>
+                <div className="relative my-auto text-2xl leading-none text-blue-600">
+                  <p className={`${copied && "text-transparent"}`}>
+                    scottnorris.work@gmail.com
+                  </p>
+                  {copied && (
+                    <p className="absolute top-0">copied to clipboard</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
