@@ -29,9 +29,9 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
-  A_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
-  A_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  A_REGION: process.env.AWS_REGION,
+  A_ACCESS_KEY: process.env.A_ACCESS_KEY,
+  A_SECRET_ACCESS_KEY: process.env.A_SECRET_ACCESS_KEY,
+  A_REGION: process.env.A_REGION,
   SES_SENDER_EMAIL: process.env.SES_SENDER_EMAIL,
   SES_RECIPIENT_EMAIL: process.env.SES_RECIPIENT_EMAIL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
