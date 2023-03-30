@@ -4,9 +4,9 @@ import * as nodemailer from "nodemailer";
 import { env } from "~/env.mjs";
 
 AWS.config.update({
-  accessKeyId: env.AWS_ACCESS_KEY,
-  secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-  region: env.AWS_REGION,
+  accessKeyId: env.A_ACCESS_KEY,
+  secretAccessKey: env.A_SECRET_ACCESS_KEY,
+  region: env.A_REGION,
 });
 
 const ses = new AWS.SES();

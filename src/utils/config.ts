@@ -11,7 +11,7 @@ export const projects: ProjectCardItem[] = [
     name: "green pantry",
     desc: "Directory for food product ratings with the aim of increasing transparency.",
     tech: "Next.js + React + Tailwind",
-    link: "#",
+    link: "https://github.com/lap-top/folio/tree/main/src/projects/localsimple.mdx",
   },
   {
     image: "/projects/localsimple.png",

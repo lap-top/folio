@@ -6,9 +6,9 @@ import { z } from "zod";
  */
 const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
-  AWS_ACCESS_KEY: z.string(),
-  AWS_SECRET_ACCESS_KEY: z.string(),
-  AWS_REGION: z.string(),
+  A_ACCESS_KEY: z.string(),
+  A_SECRET_ACCESS_KEY: z.string(),
+  A_REGION: z.string(),
   SES_SENDER_EMAIL: z.string().email(),
   SES_RECIPIENT_EMAIL: z.string().email(),
 });
@@ -29,9 +29,9 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
-  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
-  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  AWS_REGION: process.env.AWS_REGION,
+  A_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  A_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  A_REGION: process.env.AWS_REGION,
   SES_SENDER_EMAIL: process.env.SES_SENDER_EMAIL,
   SES_RECIPIENT_EMAIL: process.env.SES_RECIPIENT_EMAIL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
