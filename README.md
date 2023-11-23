@@ -1,2 +1,2 @@
 # Folio
-a sad old folio which I do not like.
+a sad old folio concept which I do not like.
